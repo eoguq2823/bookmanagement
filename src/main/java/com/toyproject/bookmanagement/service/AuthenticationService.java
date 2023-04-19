@@ -1,10 +1,10 @@
 package com.toyproject.bookmanagement.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
 
+import com.toyproject.bookmanagement.dto.auth.RegisteUserReqDto;
+import com.toyproject.bookmanagement.dto.auth.SignupReqDto;
+import com.toyproject.bookmanagement.entity.User;
 import com.toyproject.bookmanagement.exception.CustomException;
 import com.toyproject.bookmanagement.exception.ErrorMap;
 import com.toyproject.bookmanagement.repository.UserRepository;
@@ -26,5 +26,13 @@ public class AuthenticationService {
 //							.put("여기다", "또 put할수있음")
 							.build());
 		}
+	}
+	
+	public void signup(SignupReqDto signupReqDto) {
+		User userEntity = signupReqDto.toEntity();
+//		userEntity.setEmail(signupReqDto.getEmail());
+//		userEntity.setPassword(signupReqDto.getPassword());
+//		userEntity.setName(signupReqDto.getName()); //이렇게 해주면 코드가 지저분해지니깐 사인업Dto에 만들어줌
+		userRepository.saveUser(userEntity);
 	}
 }

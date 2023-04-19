@@ -45,4 +45,10 @@
 		where
 			ut.email = #{email}
 	</select>
+	
+	<insert id="saveUser" parameterType= "com.toyproject.bookmanagement.entity.User">
+		insert into user_tb
+		value(0, #{email}, #{password}, #{name} #{provider})
+	</insert>
+	
 </mapper>

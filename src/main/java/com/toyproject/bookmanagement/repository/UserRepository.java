@@ -9,5 +9,6 @@ public interface UserRepository {
 
 	//db에서 email찾기~
 	public User findUserByEmail(String email);
+	public  int saveUser(User user);
 }
 

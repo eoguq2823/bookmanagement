@@ -31,9 +31,12 @@ public class AuthenticationController {
 	
 	@CrossOrigin
 	@ValidAspect
-	@PostMapping("/signup")
+	@PostMapping("/signup")		//@Valid 이게 실제로 검사함 / SignupReqDto signupReqDto 형태로 이메일 패스워드 네임이 들어올거다.
+	//@Valid  BindingResult bindingResult 는 세트임 
+	//signup이 호출이되면 매개변수 값들이 다들어옴 그러면 aop가 반응을함.
 	public ResponseEntity<?> signup(@Valid @RequestBody SignupReqDto signupReqDto, BindingResult bindingResult) {
 		authenticationService.checkDuplicatedEmail(signupReqDto.getEmail());
+		authenticationService.signup(signupReqDto); //유저테이블에는 인설트됨 하지만 유저테이블에만 주면안되고 권한까지 줘야함.
 		return ResponseEntity.ok(null);
 	}
 }
