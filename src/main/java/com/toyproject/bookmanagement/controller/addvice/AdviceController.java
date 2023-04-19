@@ -12,6 +12,6 @@ public class AdviceController {
 
 	@ExceptionHandler(CustomException.class)
 	public ResponseEntity<?> CustomException(CustomException e) {
-		return ResponseEntity.badRequest().body(new ErrorResponseDto<>(e.getMessage(), e.getErrorrMap()));
+		return ResponseEntity.badRequest().body(new ErrorResponseDto<>(e.getMessage(), e.getErrorMap()));
 	}
 }
