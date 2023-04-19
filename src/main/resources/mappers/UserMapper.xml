@@ -19,12 +19,12 @@
 		<association property="role" resultMap="roleMap" /> <!-- 리스트인경우에는 컬렉션 / 단일 경우 association  -->
 	</resultMap>
 	
-	<resultMap type="com.toyproject.bookmanagement.entity.Role" id="RoleMap">
+	<resultMap type="com.toyproject.bookmanagement.entity.Role" id="roleMap">
 		<id property="roleId" column="role_id"/>
 		<result property="roleName" column="role_name"/>
 	</resultMap>
 	
-	<select id="findUserByEmail">
+	<select id="findUserByEmail" resultMap="userMap">
 		select
 			ut.user_id,
 			ut.email,
@@ -43,6 +43,6 @@
 		    left outer join authority_tb at on(at.user_id = ut.user_id)
 		    left outer join role_tb rt on(rt.role_id = at.role_id)
 		where
-			um.email = #{email}
+			ut.email = #{email}
 	</select>
 </mapper>

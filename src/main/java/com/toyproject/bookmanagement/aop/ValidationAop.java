@@ -36,6 +36,7 @@ public class ValidationAop {
 		
 		if(bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
+			
 			bindingResult.getFieldErrors().forEach(error -> {
 				errorMap.put(error.getField(), error.getDefaultMessage());
 			});
