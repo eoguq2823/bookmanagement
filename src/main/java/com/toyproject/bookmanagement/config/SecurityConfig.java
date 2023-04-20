@@ -22,7 +22,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable(); //csrf를 사용안하겟다. 안하면 요청이 안날라간다.
 		http.httpBasic().disable();
 		http.formLogin().disable();
+		
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 세션 사용하지 않겠다.
+		
 		http.authorizeRequests()
 			.antMatchers("/auth/**") //앞에 auth가 붙으면 허용한다.
 			.permitAll()

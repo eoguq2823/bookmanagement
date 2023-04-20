@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.toyproject.bookmanagement.aop.annotation.ValidAspect;
+import com.toyproject.bookmanagement.dto.auth.LoginReqDto;
 import com.toyproject.bookmanagement.dto.auth.SignupReqDto;
 import com.toyproject.bookmanagement.service.AuthenticationService;
 
@@ -25,8 +26,10 @@ public class AuthenticationController {
 	private final AuthenticationService authenticationService;
 	
 	@PostMapping("/login")
-	public ResponseEntity<?> login() {
-		return ResponseEntity.ok(null);
+	public ResponseEntity<?> login(@RequestBody LoginReqDto loginReqDto) {
+//		System.out.println(loginReqDto);
+		authenticationService.signin(loginReqDto);
+		return ResponseEntity.ok().body(null);
 	}
 	
 	@CrossOrigin
@@ -37,6 +40,6 @@ public class AuthenticationController {
 	public ResponseEntity<?> signup(@Valid @RequestBody SignupReqDto signupReqDto, BindingResult bindingResult) {
 		authenticationService.checkDuplicatedEmail(signupReqDto.getEmail());
 		authenticationService.signup(signupReqDto); //유저테이블에는 인설트됨 하지만 유저테이블에만 주면안되고 권한까지 줘야함.
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok().body(true);
 	}
 }

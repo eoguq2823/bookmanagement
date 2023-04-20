@@ -21,4 +21,5 @@ public class User {
 	
 	//하나의 유저는 여러개의 권한을 가질 수 있다.
 	private List<Authority> authorities;
+	
 }
