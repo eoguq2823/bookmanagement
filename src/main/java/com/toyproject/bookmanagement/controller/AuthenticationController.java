@@ -25,11 +25,11 @@ public class AuthenticationController {
 	
 	private final AuthenticationService authenticationService;
 	
+	@ValidAspect
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginReqDto loginReqDto) {
+	public ResponseEntity<?> login(@Valid @RequestBody LoginReqDto loginReqDto, BindingResult bindingResult) {
 //		System.out.println(loginReqDto);
-		authenticationService.signin(loginReqDto);
-		return ResponseEntity.ok().body(null);
+		return ResponseEntity.ok().body(authenticationService.signin(loginReqDto)); // ok만 바디안에 값넣기 가능
 	}
 	
 	@CrossOrigin

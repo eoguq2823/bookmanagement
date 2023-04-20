@@ -1,6 +1,7 @@
 package com.toyproject.bookmanagement.dto.auth;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +14,7 @@ import lombok.Data;
 public class SignupReqDto { 
 	//각각 벨리데이션을 달아줌. 규칙만 정해둔 상태. 실제러 검사하는건 @Valid
 	@Email  //validation
+	@NotBlank (message = "이메일을 입력하세요.")
 	private String email;
 	
 	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",

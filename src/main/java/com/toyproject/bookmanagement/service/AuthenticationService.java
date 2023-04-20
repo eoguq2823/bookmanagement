@@ -16,6 +16,7 @@ import com.toyproject.bookmanagement.entity.User;
 import com.toyproject.bookmanagement.exception.CustomException;
 import com.toyproject.bookmanagement.exception.ErrorMap;
 import com.toyproject.bookmanagement.repository.UserRepository;
+import com.toyproject.bookmanagement.security.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ public class AuthenticationService implements UserDetailsService {
 	
 	private final UserRepository userRepository;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
+	private final JwtTokenProvider jwtTokenProvider;
 	
 	public void checkDuplicatedEmail(String email) { //이메일만 중복확인
 		//db에있는지 확인위해 UserRepository로 이동
@@ -54,10 +56,12 @@ public class AuthenticationService implements UserDetailsService {
 		UsernamePasswordAuthenticationToken authenticationToken = 
 				new UsernamePasswordAuthenticationToken(loginReqDto.getEmail(), loginReqDto.getPassword());
 		
-		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-		System.out.println(authentication.getPrincipal());
 		
-		return null;
+		//여기까지가 로그인 성공이라고 보면됨.
+		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+//		System.out.println(authentication.getPrincipal());
+		
+		return jwtTokenProvider.generateToken(authentication);
 		//이거 땅하는 순간 요청때 들어온 아이디 패스워드와 DB의 아이디패스워드를 비교함 
 		
 	}
@@ -66,12 +70,12 @@ public class AuthenticationService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		User userEntity = userRepository.findUserByEmail(username);
-		
+		System.out.println(userEntity);
 		if(userEntity == null) {
 			throw new CustomException("로그인 실패", ErrorMap.builder().put("email", "사용자 정보를 확인하세요.").build());
 		}
 		
-		return null;
+		return userEntity.toPrincipal();
 	}
 	
 }
