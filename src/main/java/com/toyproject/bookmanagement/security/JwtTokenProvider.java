@@ -4,13 +4,13 @@ import java.security.Key;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.toyproject.bookmanagement.dto.auth.JwtRespDto;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -86,5 +86,14 @@ public class JwtTokenProvider {
 			return token.substring(type.length() + 1);
 		}
 		return null;
+	}
+	
+	// getbody안에 들어 있는 정보를 꺼내오는것. (권한, 유저이메일) 이 정보 가지고 DB에서 정보를 가져와야함. 
+	public Claims getClaims(String token) {
+		return Jwts.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token)
+				.getBody();
 	}
 }

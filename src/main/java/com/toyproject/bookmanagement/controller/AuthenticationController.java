@@ -43,11 +43,18 @@ public class AuthenticationController {
 		authenticationService.signup(signupReqDto); //유저테이블에는 인설트됨 하지만 유저테이블에만 주면안되고 권한까지 줘야함.
 		return ResponseEntity.ok().body(true);
 	}
+	
 	@GetMapping("/authenticated")
 	public ResponseEntity<?> authenticated(String accessToken) {
 		System.out.println(accessToken);
 		
 		return ResponseEntity.ok().body(authenticationService.authenticated(accessToken));
 	}
+	
+	@GetMapping("/principal") //로그인된 후 사용자 정보 들고 있는 메소드
+	public ResponseEntity<?> principal(String accessToken) {
+		return ResponseEntity.ok().body(authenticationService.getPrincipal(accessToken));
+	}
+	
 	 
 }

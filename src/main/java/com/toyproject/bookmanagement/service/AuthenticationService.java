@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.toyproject.bookmanagement.dto.auth.JwtRespDto;
 import com.toyproject.bookmanagement.dto.auth.LoginReqDto;
+import com.toyproject.bookmanagement.dto.auth.PrincipalRespDto;
 import com.toyproject.bookmanagement.dto.auth.SignupReqDto;
 import com.toyproject.bookmanagement.entity.Authority;
 import com.toyproject.bookmanagement.entity.User;
@@ -18,6 +19,7 @@ import com.toyproject.bookmanagement.exception.ErrorMap;
 import com.toyproject.bookmanagement.repository.UserRepository;
 import com.toyproject.bookmanagement.security.JwtTokenProvider;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -80,5 +82,17 @@ public class AuthenticationService implements UserDetailsService {
 	
 	public boolean authenticated(String accessToken) {
 		return jwtTokenProvider.validateToken(jwtTokenProvider.getToken(accessToken)); //jwtTokenProvider.validateToken에다가 accessToken넘겨줌 
+	}
+	//토큰 프로바이드에서 토큰 만들때 셋 서브젝(어텐티션.getName) 에세스 토큰만 있으면 로그인된 유저의 정보를 알수있다.
+	public PrincipalRespDto getPrincipal(String accessToken) {
+		Claims claims = jwtTokenProvider.getClaims(jwtTokenProvider.getToken(accessToken));
+		User userEntity = userRepository.findUserByEmail(claims.getSubject()); //getSubject -> email
+		
+		return PrincipalRespDto.builder()
+				.userId(userEntity.getUserId())
+				.email(userEntity.getEmail())
+				.name(userEntity.getName())
+				.authorities((String) claims.get("auth"))
+				.build();
 	}
 }
