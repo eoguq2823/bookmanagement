@@ -27,9 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.authorizeRequests()
 			.antMatchers("/auth/**") //앞에 auth가 붙으면 허용한다.
-			.permitAll()
-			.anyRequest()
-			.authenticated(); //인증을 거쳐라
+			.permitAll();
+//			.anyRequest()
+//			.authenticated(); //인증을 거쳐라
 		
 	}
 
