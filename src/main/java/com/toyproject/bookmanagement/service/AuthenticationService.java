@@ -72,7 +72,7 @@ public class AuthenticationService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		User userEntity = userRepository.findUserByEmail(username);
-		System.out.println(userEntity);
+		
 		if(userEntity == null) {
 			throw new CustomException("로그인 실패", ErrorMap.builder().put("email", "사용자 정보를 확인하세요.").build());
 		}

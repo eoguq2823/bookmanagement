@@ -35,7 +35,5 @@ public class Book {
 				.categoryName(category.getCategoryName())
 				.coverImgUrl(coverImgUrl)
 				.build();
-
 	}
-
 }

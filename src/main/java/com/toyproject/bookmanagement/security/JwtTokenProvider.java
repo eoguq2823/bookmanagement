@@ -1,14 +1,22 @@
 package com.toyproject.bookmanagement.security;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.catalina.startup.UserDatabase;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.toyproject.bookmanagement.dto.auth.JwtRespDto;
+import com.toyproject.bookmanagement.exception.CustomException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -35,8 +43,7 @@ public class JwtTokenProvider {
 		
 		StringBuilder builder = new StringBuilder();
 		authentication.getAuthorities().forEach(authority -> {
-			builder.append(authority.getAuthority());
-			builder.append(",");
+			builder.append(authority.getAuthority() + ",");
 		});
 		//다돌고 마지막 심표 제거위해서
 		builder.delete(builder.length() - 1, builder.length()); // builder -> ROLE_USER, 
@@ -65,6 +72,7 @@ public class JwtTokenProvider {
 				.parseClaimsJws(token); //Jws
 
 			return true;
+			
 		} catch (SecurityException | MalformedJwtException e) {
 			log.info("Invalid JWT Token", e);
 		} catch (ExpiredJwtException e) {
@@ -85,6 +93,7 @@ public class JwtTokenProvider {
 		if(StringUtils.hasText(token) && token.startsWith(type)) {
 			return token.substring(type.length() + 1);
 		}
+		
 		return null;
 	}
 	
@@ -95,5 +104,27 @@ public class JwtTokenProvider {
 				.build()
 				.parseClaimsJws(token)
 				.getBody();
+	}
+	
+	public Authentication getAuthentication(String accessToken) {
+		Authentication authentication = null;
+		
+		Claims claims = getClaims(accessToken);
+		//문자열로 바꾸기전에 
+		if(claims.get("auth") == null) {
+			throw new CustomException("AccessToken에 권한 정보가 없습니다.");
+		}
+		
+		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		
+		String auth = claims.get("auth").toString(); // get을 했을때 안이 비어있을수도있다. (권한이 없으면 Null이라고 문자열로 나옴) 
+		for(String role : auth.split(",")) { //split하면 배열로 만들어줌
+			authorities.add(new SimpleGrantedAuthority(role)); //쉼표로 자른녀석들을 role에 넣어줌
+		}		
+		
+		UserDetails userDetails = new User(claims.getSubject(), "", authorities); //시큐리티에 있는 User (username, "", authorities)
+		
+		authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities); //이정보를가지고 authentication객체생성
+		return authentication; 
 	}
 }
