@@ -10,7 +10,7 @@ public class ErrorMap {
 	private ErrorMap() {
 		errorMap = new HashMap<>();
 	}
-	
+	// builder메서드 호출 -> 비어있는 errorMap 생성
 	public static ErrorMap builder() {
 		return new ErrorMap();
 	}

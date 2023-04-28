@@ -15,9 +15,4 @@ public class AdviceController {
 	public ResponseEntity<?> customException(CustomException e) {
 		return ResponseEntity.badRequest().body(new ErrorResponseDto<>(e.getMessage(), e.getErrorMap()));
 	}
-	
-	@ExceptionHandler(UsernameNotFoundException.class)
-	public ResponseEntity<?> customException(UsernameNotFoundException e) {
-		return ResponseEntity.badRequest().body(new ErrorResponseDto<>(e.getMessage(), null));
-	}
 }
